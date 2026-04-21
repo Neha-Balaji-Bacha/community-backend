@@ -33,15 +33,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 //allow frontend applications from other origins (different ports/domains) to access the backend API.
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173", // local frontend
-      "https://your-netlify-app.netlify.app" // 🔥 replace later
-    ],
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://hilarious-sunshine-23077e.netlify.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 //Whenever a request comes from the browser, read the cookies and convert them into an object.
 app.use(cookieParser());
