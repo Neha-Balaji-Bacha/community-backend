@@ -33,10 +33,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 //allow frontend applications from other origins (different ports/domains) to access the backend API.
-app.use(cors({
-  origin: "http://localhost:5173" ,
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // local frontend
+      "https://your-netlify-app.netlify.app" // 🔥 replace later
+    ],
+    credentials: true,
+  })
+);
 
 //Whenever a request comes from the browser, read the cookies and convert them into an object.
 app.use(cookieParser());
@@ -71,6 +76,11 @@ app.use("/api/user",userRoutes);
 app.use("/api/event", eventRoutes);
 app.use("/api/community", communityRoutes);
 //starts the Express server and it listen requests on the specified port.
+
+
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
 
 
 app.listen(PORT, () => {
