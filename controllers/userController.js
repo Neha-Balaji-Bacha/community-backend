@@ -182,8 +182,12 @@ const profile = async (req, res) => {
 //Join Community
 const joinCommunity = async(req,res) => {
   try{
-    const {communityId} = req.query;
+    const { communityId } = req.params;
     
+console.log("USER:", req.user);
+console.log("USER ID:", req.user?._id);
+console.log("COMMUNITY ID:", communityId);
+
    if (!communityId) {
      return res.status(400).json({
        data: null,
@@ -192,9 +196,12 @@ const joinCommunity = async(req,res) => {
    }
     const result = await userService.joinCommunity({userId: req.user._id,communityId});
 res.json({
-  data: result,
- message: "successfully joined community",
-  error: null
+  data: {
+    community: result.community,
+    joinedCommunities: result.joinedCommunities,
+  },
+  message: "successfully joined community",
+  error: null,
 });
   }
   catch(err){

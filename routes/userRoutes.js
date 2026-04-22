@@ -14,7 +14,7 @@ router.post("/register",userController.register);
 router.post("/login",userController.login);
 router.post("/logout",userController.logout);
 router.get("/me",authMiddleware, userController.profile);
-router.patch("/join-community", authMiddleware,userController.joinCommunity);
+router.patch("/join-community/:communityId", authMiddleware, userController.joinCommunity);
 router.patch("/make-host" , authMiddleware,userController.makeHost);
 router.patch("/leave-community/:id", authMiddleware,userController.leaveCommunity);
 router.get("/dashboard", authMiddleware, isMemberMiddleware, userController.dashboard);
