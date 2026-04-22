@@ -12,8 +12,8 @@ const register = async(req,res) => {
         res.cookie("token" ,token,{
             httpOnly: true,
             //secure: true//keep it for PRODUCTION
-            secure:true,
-            sameSite:"none",//lax,strict,none
+            secure:false,
+            sameSite:"lax",//lax,strict,none
             maxAge: 1*24*60*60*1000//1day
         })
             const user = await User.findOne({ email }).select("_id name email role");
@@ -47,8 +47,8 @@ const login = async (req, res) => {
 
     res.cookie("token", loginData.token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      sameSite: "lax",
       maxAge: 1 * 24 * 60 * 60 * 1000,
     });
 
@@ -108,8 +108,8 @@ const resetPassword = async (req, res) => {
     // clear login cookie after reset
    res.clearCookie("token", {
   httpOnly: true,
-  secure: true, // true in production
-  sameSite: "none",
+  secure: false, // true in production
+  sameSite: "lax",
 });
 
     res.json({
@@ -182,40 +182,23 @@ const profile = async (req, res) => {
 //Join Community
 const joinCommunity = async(req,res) => {
   try{
-    if (!req.user) {
-      return res.status(401).json({
-        data: null,
-        error: { message: "User not logged in" },
-      });
-    }
-
     const {communityId} = req.query;
-
-    console.log("USER:", req.user);
-    console.log("USER ID:", req.user._id);
-    console.log("COMMUNITY ID:", communityId);
-
-    if (!communityId) {
-      return res.status(400).json({
-        data: null,
-        error: { message: "communityId is required" },
-      });
-    }
-
-    const result = await userService.joinCommunity({
-      userId: req.user._id,
-      communityId
-    });
-
-    res.json({
-      data: result,
-      message: "successfully joined community",
-      error: null
-    });
-
-  } catch(err){
-    console.log("JOIN ERROR:", err.message);
-
+    
+   if (!communityId) {
+     return res.status(400).json({
+       data: null,
+       error: { message: "communityId is required" },
+     });
+   }
+    const result = await userService.joinCommunity({userId: req.user._id,communityId});
+res.json({
+  data: result,
+ message: "successfully joined community",
+  error: null
+});
+  }
+  catch(err){
+    console.log(err.message);
     res.json({
       error: {
         message: "failed to add user in community",
@@ -257,8 +240,8 @@ const logout = (req,res) => {
     res.clearCookie(
       "token", {
          httpOnly: true,
-  secure: true,
-  sameSite: "none",
+  secure: false,
+  sameSite: "lax",
   path: "/", 
       });  
       return res.json(
