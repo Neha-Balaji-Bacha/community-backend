@@ -52,11 +52,11 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], 
     credentials: true,
   })
 );
-
+app.options("*", cors());
 // ==========================================================
 
 // Whenever a request comes from the browser, read the cookies and convert them into an object.
