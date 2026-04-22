@@ -34,7 +34,10 @@ const __dirname = path.dirname(__filename);
 
 //allow frontend applications from other origins (different ports/domains) to access the backend API.
 app.use(cors({
-  origin: true,
+  origin: [
+    "http://localhost:5173",
+    "https://your-netlify-url.netlify.app"
+  ],
   credentials: true
 }));
 
