@@ -74,7 +74,6 @@ const MONGO_URI = process.env.MONGO_URI;
 // connect to MongoDB
 // connectDb is function name used to connect the database (inside config/db.js)
 connectDb(MONGO_URI);
-
 // ======================= MIDDLEWARE =======================
 // Middleware is a function that runs between the client request and the server response
 // app.use() is used to mount middleware or routers onto the Express application
