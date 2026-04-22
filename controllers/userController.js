@@ -13,7 +13,7 @@ const register = async(req,res) => {
             httpOnly: true,
             //secure: true//keep it for PRODUCTION
             secure:true,
-            sameSite:"lax",//lax,strict,none
+            sameSite:"none",//lax,strict,none
             maxAge: 1*24*60*60*1000//1day
         })
             const user = await User.findOne({ email }).select("_id name email role");
@@ -48,7 +48,7 @@ const login = async (req, res) => {
     res.cookie("token", loginData.token, {
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 1 * 24 * 60 * 60 * 1000,
     });
 
@@ -109,7 +109,7 @@ const resetPassword = async (req, res) => {
    res.clearCookie("token", {
   httpOnly: true,
   secure: true, // true in production
-  sameSite: "lax",
+  sameSite: "none",
 });
 
     res.json({
@@ -258,7 +258,7 @@ const logout = (req,res) => {
       "token", {
          httpOnly: true,
   secure: true,
-  sameSite: "lax",
+  sameSite: "none",
   path: "/", 
       });  
       return res.json(
