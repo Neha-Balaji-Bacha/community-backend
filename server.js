@@ -56,7 +56,6 @@ app.use(
     credentials: true,
   })
 );
-app.options("*", cors());
 // ==========================================================
 
 // Whenever a request comes from the browser, read the cookies and convert them into an object.
