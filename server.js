@@ -36,24 +36,12 @@ const __dirname = path.dirname(__filename);
 // ======================= CORS CONFIG =======================
 // allow frontend applications from other origins (different ports/domains) to access the backend API.
 
-const allowedOrigins = [
-  "http://localhost:5173", // Local Vite dev server
-  "https://hilarious-sunshine-23077e.netlify.app", // Deployed frontend (Netlify)
-];
-
+// ======================= CORS CONFIG (LOCAL TESTING) =======================
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like Postman / mobile apps)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log("Blocked by CORS:", origin);
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], 
-    credentials: true,
+    origin: "http://localhost:5173", // your frontend local URL
+    credentials: true, // allow cookies/auth headers
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // explicitly allowed methods
   })
 );
 // ==========================================================
@@ -64,6 +52,12 @@ app.use(cookieParser());
 // converts JSON data from the request body into a JavaScript object.
 app.use(express.json());
 
+// Debug middleware (helps during development to track requests)
+app.use((req, res, next) => {
+  console.log(`Request: ${req.method} ${req.url}`);
+  next();
+});
+
 // port from .env
 const PORT = process.env.PORT || 5000;
 
@@ -73,7 +67,13 @@ const MONGO_URI = process.env.MONGO_URI;
 
 // connect to MongoDB
 // connectDb is function name used to connect the database (inside config/db.js)
-connectDb(MONGO_URI);
+connectDb(MONGO_URI)
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => {
+    console.error("MongoDB connection failed:", err.message);
+    process.exit(1); // stop server if DB fails
+  });
+
 // ======================= MIDDLEWARE =======================
 // Middleware is a function that runs between the client request and the server response
 // app.use() is used to mount middleware or routers onto the Express application
@@ -97,7 +97,13 @@ app.get("/", (req, res) => {
   res.send("Backend is running ");
 });
 
+// Global error handler (prevents server crash)
+app.use((err, req, res, next) => {
+  console.error("Error:", err.message);
+  res.status(500).json({ message: err.message || "Internal Server Error" });
+});
+
 // starts the Express server and listens for requests on the specified port
 app.listen(PORT, () => {
-  console.log("Server is listening to PORT:", PORT);
+  console.log(`Server is listening at http://localhost:${PORT}`);
 });
