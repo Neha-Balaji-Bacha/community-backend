@@ -12,8 +12,8 @@ const register = async(req,res) => {
         res.cookie("token" ,token,{
             httpOnly: true,
             //secure: true//keep it for PRODUCTION
-            secure:false,
-            sameSite:"lax",//lax,strict,none
+            secure:true,
+            sameSite:"none",//lax,strict,none
             maxAge: 1*24*60*60*1000//1day
         })
             const user = await User.findOne({ email }).select("_id name email role");
@@ -47,8 +47,8 @@ const login = async (req, res) => {
 
     res.cookie("token", loginData.token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 1 * 24 * 60 * 60 * 1000,
     });
 
@@ -108,8 +108,8 @@ const resetPassword = async (req, res) => {
     // clear login cookie after reset
    res.clearCookie("token", {
   httpOnly: true,
-  secure: false, // true in production
-  sameSite: "lax",
+  secure: true, // true in production
+  sameSite: "none",
 });
 
     res.json({
@@ -240,9 +240,8 @@ const logout = (req,res) => {
     res.clearCookie(
       "token", {
          httpOnly: true,
-  secure: false,
-  sameSite: "lax",
-  path: "/", 
+  secure: true,
+  sameSite: "none",
       });  
       return res.json(
         {data:{message: "logged out successfully"},error:null}
